@@ -18,9 +18,9 @@
 ### 3.1 Clone GitHub Repository
 > git clone https://github.com/geloyaco/LabClass_BackEnd.git
 ## 4. Test the FastAPI Routers
-### 5.1 Run FastAPI
+### 4.1 Run FastAPI
 > uvicorn main:app --reload
-### 5.2 Open FastAPI Docs in Browser
+### 4.2 Open FastAPI Docs in Browser
 > Visit http://127.0.0.1:8000/docs
   
  
