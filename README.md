@@ -16,7 +16,7 @@
 > uvicorn main:app --reload
 ## 3. Setup FastAPI Routers for Table Users
 ### 3.1 Clone GitHub Repository
-> git clone https://github.com/cbatuic/demo_fastapi.git
+> git clone https://github.com/geloyaco/LabClass_BackEnd.git
 ## 4. Test the FastAPI Routers
 ### 5.1 Run FastAPI
 > uvicorn main:app --reload
