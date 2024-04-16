@@ -16,34 +16,20 @@ async def read_admins(
     admins = [{"adminID": admin[0]} for admin in db[0].fetchall()]
     return admins
 
-@AdminRouter.get("/admin/{admin_id}", response_model=dict)
-async def read_admin(
-    admin_id: int, 
-    db=Depends(get_db)
-):
-    query = "SELECT adminID FROM admin WHERE adminID = %s"
-    db[0].execute(query, (admin_id,))
-    admin = db[0].fetchone()
-    if admin:
-        return {"adminID": admin[0]}
-    raise HTTPException(status_code=404, detail="Admin not found")
-
-@AdminRouter.post("/admin/", response_model=dict)
-async def create_admin(
+@AdminRouter.post("/login/admin", response_model=dict)
+async def admin_login(
     admin_id: int = Form(...), 
     admin_pass: str = Form(...), 
     db=Depends(get_db)
 ):
-    # Check if an admin already exists
-    query_check_admin = "SELECT COUNT(*) FROM admin"
-    db[0].execute(query_check_admin)
-    admin_count = db[0].fetchone()[0]
-    if admin_count > 0:
-        raise HTTPException(status_code=400, detail="An admin already exists. Only one admin is allowed.")
-    query = "INSERT INTO admin (adminID, adminPass) VALUES (%s, %s)"
+    query = "SELECT adminID FROM admin WHERE adminID = %s AND adminPass = %s"
     db[0].execute(query, (admin_id, admin_pass))
-    db[1].commit()
-    return {"adminID": admin_id}
+    admin = db[0].fetchone()
+    if admin:
+        return {"adminID": admin[0], "message": "Log In Successful"}
+    raise HTTPException(status_code=404, detail="Admin not found")
+
+
 
 @AdminRouter.put("/admin/{admin_id}", response_model=dict)
 async def update_admin(
