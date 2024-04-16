@@ -18,22 +18,8 @@ async def read_instructors(
                     "instructorLName": instructor[4]} for instructor in db[0].fetchall()]
     return instructors
 
-@InstructorsRouter.get("/instructors/{instructor_id}", response_model=dict)
-async def read_instructor(
-    instructor_id: int, 
-    db=Depends(get_db)
-):
-    query = "SELECT instructorID, instructorEmail, instructorUsername, instructorFName, instructorLName FROM instructor WHERE instructorID = %s"
-    db[0].execute(query, (instructor_id,))
-    instructor = db[0].fetchone()
-    if instructor:
-        return {"instructorID": instructor[0], "instructorEmail": instructor[1], 
-                "instructorUsername": instructor[2], "instructorFName": instructor[3], 
-                "instructorLName": instructor[4]}
-    raise HTTPException(status_code=404, detail="Instructor not found")
-
-@InstructorsRouter.post("/instructors/", response_model=dict)
-async def create_instructor(
+@InstructorsRouter.post("/signup/instructors", response_model=dict)
+async def instructor_signup(
     email: str = Form(...), 
     username: str = Form(...), 
     fname: str = Form(...),
@@ -52,6 +38,26 @@ async def create_instructor(
     return {"instructorID": new_instructor_id, "instructorEmail": email, 
             "instructorUsername": username, "instructorFName": fname, 
             "instructorLName": lname}
+
+@InstructorsRouter.post("/login/instructor", response_model=dict, tags=["Instructors"])
+async def instructor_login(
+    instructor_email: str = Form(...), 
+    instructor_pass: str = Form(...), 
+    db=Depends(get_db)
+):
+    query = "SELECT instructorID, instructorEmail, instructorUsername, instructorFName, instructorLName FROM instructor WHERE instructorEmail = %s AND instructorPass = %s"
+    db[0].execute(query, (instructor_email, instructor_pass))
+    instructor = db[0].fetchone()
+    if instructor:
+        return {
+            "instructorID": instructor[0], 
+            "instructorEmail": instructor[1], 
+            "instructorUsername": instructor[2], 
+            "instructorFName": instructor[3], 
+            "instructorLName": instructor[4],
+            "message": "Log In Successful"
+        }
+    raise HTTPException(status_code=404, detail="Instructor not found")
 
 @InstructorsRouter.put("/instructors/{instructor_id}", response_model=dict)
 async def update_instructor(
