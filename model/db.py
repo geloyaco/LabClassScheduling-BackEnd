@@ -5,7 +5,7 @@ db_config = {
     "host": "localhost",
     "user": "root",
     "password": "",
-    "database": "labclass",
+    "database": "schedulelabclass",
     "port": 3306,
 }
 
